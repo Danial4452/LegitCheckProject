@@ -1,0 +1,16 @@
+<div class="home-container">
+  <div class="search-box">
+    <h1>LEGIT CHECK</h1>
+    <p>Проверь свою вещь на подлинность по серийному номеру</p>
+    
+    <div class="input-group">
+      <input 
+        type="text" 
+        [(ngModel)]="searchCode" 
+        placeholder="Введите код (например, SN12345)"
+        (keyup.enter)="onCheck()"
+      >
+      <button (click)="onCheck()">ПРОВЕРИТЬ</button>
+    </div>
+  </div>
+</div>

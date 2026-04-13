@@ -1,0 +1,32 @@
+<div class="login-container">
+  <form class="login-card" (submit)="onLogin(); $event.preventDefault()">
+    <h2>Вход для экспертов</h2>
+    <p>Доступ только для авторизованных сотрудников KBTU</p>
+
+    <div class="input-group">
+      <label>Логин</label>
+      <input 
+        type="text" 
+        name="username" 
+        [(ngModel)]="loginData.username" 
+        placeholder="Введите ваш ID"
+        required>
+    </div>
+
+    <div class="input-group">
+      <label>Пароль</label>
+      <input 
+        type="password" 
+        name="password" 
+        [(ngModel)]="loginData.password" 
+        placeholder="••••••••"
+        required>
+    </div>
+
+    @if (errorMessage) {
+      <div class="error-msg">{{ errorMessage }}</div>
+    }
+
+    <button type="submit" class="login-btn">Войти в систему</button>
+  </form>
+</div>

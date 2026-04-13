@@ -1,0 +1,44 @@
+<div class="result-container">
+  @if (loading) {
+    <div class="loader">
+      <div class="spinner"></div>
+      <p>Проверяем базу данных...</p>
+    </div>
+  }
+
+  @else if (error) {
+    <div class="status-card fake">
+      <div class="icon">❌</div>
+      <h2>ВНИМАНИЕ: ПОДДЕЛКА</h2>
+      <p>{{ error }}</p>
+      <button routerLink="/">Вернуться назад</button>
+    </div>
+  }
+
+  @else if (product) {
+    <div class="status-card original">
+      <div class="header">
+        <span class="badge">VERIFIED AUTHENTIC ✅</span>
+        <h1>{{ product.brand }} {{ product.name }}</h1>
+      </div>
+
+      <div class="details-grid">
+        <div class="info-item">
+          <strong>Серийный номер:</strong>
+          <span>{{ product.serial_number }}</span>
+        </div>
+        <div class="info-item">
+          <strong>Место производства:</strong>
+          <span>{{ product.manufacture_location }}</span>
+        </div>
+      </div>
+
+      <div class="history-section">
+        <h3>История и происхождение:</h3>
+        <p>{{ product.history }}</p>
+      </div>
+
+      <button routerLink="/" class="back-btn">Проверить еще одну вещь</button>
+    </div>
+  }
+</div>
