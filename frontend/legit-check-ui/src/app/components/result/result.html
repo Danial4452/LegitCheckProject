@@ -7,18 +7,23 @@
   }
 
   @else if (error) {
-    <div class="status-card fake">
-      <div class="icon">❌</div>
-      <h2>ВНИМАНИЕ: ПОДДЕЛКА</h2>
+    <div class="status-card error-case">
+      <div class="icon">⚠️</div>
+      <h2>ОШИБКА</h2>
       <p>{{ error }}</p>
-      <button routerLink="/">Вернуться назад</button>
+      <button routerLink="/" class="back-btn">Вернуться назад</button>
     </div>
   }
 
   @else if (product) {
-    <div class="status-card original">
+    <div class="status-card" [class.original]="product.is_authentic" [class.fake]="!product.is_authentic">
+      
       <div class="header">
-        <span class="badge">VERIFIED AUTHENTIC ✅</span>
+        @if (product.is_authentic) {
+          <span class="badge authentic">VERIFIED AUTHENTIC ✅</span>
+        } @else {
+          <span class="badge fake">NOT AUTHENTIC / FAKE ❌</span>
+        }
         <h1>{{ product.brand }} {{ product.name }}</h1>
       </div>
 
@@ -28,6 +33,12 @@
           <span>{{ product.serial_number }}</span>
         </div>
         <div class="info-item">
+          <strong>Вердикт:</strong>
+          <span class="verdict-text">
+            {{ product.is_authentic ? 'Оригинал' : 'Подделка' }}
+          </span>
+        </div>
+        <div class="info-item full-width">
           <strong>Место производства:</strong>
           <span>{{ product.manufacture_location }}</span>
         </div>

@@ -1,0 +1,20 @@
+<div class="login-container">
+  <form class="login-card" (submit)="onRegister(); $event.preventDefault()">
+    <h2>Регистрация эксперта</h2>
+    <div class="input-group">
+      <label>Логин</label>
+      <input type="text" name="user" [(ngModel)]="registerData.username" required>
+    </div>
+    <div class="input-group">
+      <label>Пароль</label>
+      <input type="password" name="pass" [(ngModel)]="registerData.password" required>
+    </div>
+    <div class="input-group">
+      <label>Token ID</label>
+      <input type="text" name="token" [(ngModel)]="registerData.tokenId" placeholder="Введите код доступа" required>
+    </div>
+    <p class="error-msg" *ngIf="errorMessage">{{ errorMessage }}</p>
+    <button type="submit" class="login-btn">Создать аккаунт</button>
+    <a routerLink="/login" class="back-link">Уже есть доступ? Войти</a>
+  </form>
+</div>
