@@ -13,7 +13,7 @@ import { CommonModule } from '@angular/common';
 })
 export class LoginComponent {
   loginData = {
-    login: '',
+    username: '',
     password: ''
   };
   errorMessage: string = '';
@@ -24,7 +24,8 @@ export class LoginComponent {
     this.apiService.login(this.loginData).subscribe({
       next: (response) => {
         localStorage.setItem('token', response.token);
-        localStorage.setItem('role', response.role || 'Expert');
+        localStorage.setItem('username', response.username);
+        localStorage.setItem('isAdmin', response.is_admin ? 'true' : 'false');
         
         // Полная перезагрузка страницы для эффекта "настоящего входа", как на YouTube
         window.location.href = '/dashboard';

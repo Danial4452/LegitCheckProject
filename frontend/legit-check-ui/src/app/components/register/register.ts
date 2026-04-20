@@ -18,15 +18,12 @@ export class RegisterComponent {
   constructor(private apiService: ApiService, private router: Router) {}
 
   onRegister() {
-    if (this.registerData.tokenId !== 'KBTU-ADMIN-2026') {
-      this.errorMessage = 'Неверный Token ID. Доступ запрещен.';
-      return;
-    }
 
     this.apiService.register(this.registerData).subscribe({
       next: (response) => {
         localStorage.setItem('token', response.token);
-        localStorage.setItem('role', response.role || 'Expert');
+        localStorage.setItem('username', response.username);
+        localStorage.setItem('isAdmin', response.is_admin ? 'true' : 'false');
         this.router.navigate(['/dashboard']);
       },
       error: (err) => {

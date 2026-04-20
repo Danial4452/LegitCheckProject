@@ -1,14 +1,14 @@
 <div class="login-container">
   <form class="login-card" (submit)="onLogin(); $event.preventDefault()">
-    <h2>Вход для экспертов</h2>
-    <p>Доступ только для авторизованных сотрудников KBTU</p>
+    <h2>Вход в систему</h2>
+    <p>Доступ только для авторизованных пользователей</p>
 
     <div class="input-group">
       <label>Логин</label>
       <input 
         type="text" 
         name="username" 
-        [(ngModel)]="loginData.login" 
+        [(ngModel)]="loginData.username" 
         placeholder="Введите ваш ID"
         required>
     </div>

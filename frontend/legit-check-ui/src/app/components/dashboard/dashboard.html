@@ -1,4 +1,4 @@
-<div class="dashboard-container" style="padding: 2rem; max-width: 800px; margin: 0 auto;">
+<div class="dashboard-container" style="padding: 2rem; max-width: 1000px; margin: 0 auto;">
   @if (loading) {
     <div class="loader-container" style="text-align: center; margin-top: 5rem; display: flex; flex-direction: column; align-items: center; justify-content: center;">
       <div class="spinner"></div>
@@ -7,41 +7,103 @@
   } @else {
     <h2>Добро пожаловать в Личный Кабинет</h2>
     <div class="card" style="background: white; border-radius: 8px; padding: 2rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-top: 2rem; animation: fadeIn 0.5s ease-out;">
-      <h3>Ваша роль: <strong>{{ role }}</strong></h3>
-      <p style="margin-top: 1rem; color: #555;">Вы успешно авторизованы в системе LegitCheck. Ниже вы можете управлять вашими комментариями.</p>
+      <h3>Владелец аккаунта: <strong>{{ username }}</strong></h3>
+      <p style="margin-top: 0.5rem; color: #0284c7; font-weight: 500;">
+        Роль: {{ isAdmin ? 'Администратор (Полный доступ)' : 'Обычный пользователь' }}
+      </p>
       
-      <div class="my-comments-section" style="margin-top: 2rem; border-top: 1px solid #ddd; padding-top: 1.5rem;">
-        <h3>Мои комментарии ({{ myComments.length }})</h3>
-        
-        <div class="comments-list">
-          @for (comment of myComments; track comment.id) {
-            <div class="comment-card" style="background: #f8fafc; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; border: 1px solid #e2e8f0;">
-              <div style="font-size: 0.9rem; color: #475569; margin-bottom: 8px; display: flex; justify-content: space-between;">
-                <span><strong>{{ comment.product_name }}</strong> (Серийный номер: {{ comment.product_serial }})</span>
-                <span>{{ comment.created_at | date:'short' }}</span>
-              </div>
-              
-              @if (editingCommentId === comment.id) {
-                <div class="edit-form" style="margin-top: 10px;">
-                  <textarea [(ngModel)]="editingText" rows="3" style="width: 100%; padding: 8px; border-radius: 4px; border: 1px solid #ccc; margin-bottom: 8px;"></textarea>
-                  <div style="display: flex; gap: 10px;">
-                    <button (click)="saveComment(comment)" style="background: #10b981; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer;">Сохранить</button>
-                    <button (click)="cancelEditing()" style="background: #94a3b8; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer;">Отмена</button>
-                  </div>
-                </div>
-              } @else {
-                <p style="margin: 0; color: #1e293b;">{{ comment.text }}</p>
-                <button (click)="startEditing(comment)" style="margin-top: 10px; background: transparent; border: 1px solid #cbd5e1; color: #475569; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.85rem;">Редактировать</button>
-              }
-            </div>
-          }
-          @if (myComments.length === 0) {
-            <p style="color: #64748b; font-style: italic;">У вас пока нет комментариев.</p>
-          }
+      @if (isAdmin) {
+        <div class="tabs" style="display: flex; gap: 1rem; margin-top: 1.5rem; border-bottom: 2px solid #f1f5f9; padding-bottom: 0.5rem;">
+          <button (click)="setTab('my-comments')" [style.border-bottom]="activeTab === 'my-comments' ? '2px solid #0284c7' : 'none'" [style.color]="activeTab === 'my-comments' ? '#0284c7' : '#64748b'" style="background:none; border:none; padding:0.5rem 1rem; font-weight:bold; cursor:pointer;">Мои комментарии</button>
+          <button (click)="setTab('all-comments')" [style.border-bottom]="activeTab === 'all-comments' ? '2px solid #0284c7' : 'none'" [style.color]="activeTab === 'all-comments' ? '#0284c7' : '#64748b'" style="background:none; border:none; padding:0.5rem 1rem; font-weight:bold; cursor:pointer;">Все комментарии</button>
+          <button (click)="setTab('products')" [style.border-bottom]="activeTab === 'products' ? '2px solid #0284c7' : 'none'" [style.color]="activeTab === 'products' ? '#0284c7' : '#64748b'" style="background:none; border:none; padding:0.5rem 1rem; font-weight:bold; cursor:pointer;">Управление товарами</button>
         </div>
-      </div>
+      }
+      
+      @if (activeTab === 'my-comments') {
+        <div class="my-comments-section" style="margin-top: 1.5rem;">
+          <h3>Мои комментарии ({{ myComments.length }})</h3>
+          <div class="comments-list">
+            @for (comment of myComments; track comment.id) {
+              <div class="comment-card" style="background: #f8fafc; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; border: 1px solid #e2e8f0;">
+                <div style="font-size: 0.9rem; color: #475569; margin-bottom: 8px; display: flex; justify-content: space-between;">
+                  <span><strong>{{ comment.product_name }}</strong> (Серийный номер: {{ comment.product_serial }})</span>
+                  <span>{{ comment.created_at | date:'short' }}</span>
+                </div>
+                @if (editingCommentId === comment.id) {
+                  <div class="edit-form" style="margin-top: 10px;">
+                    <textarea [(ngModel)]="editingText" rows="3" style="width: 100%; padding: 8px; border-radius: 4px; border: 1px solid #ccc; margin-bottom: 8px;"></textarea>
+                    <div style="display: flex; gap: 10px;">
+                      <button (click)="saveComment(comment)" style="background: #10b981; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer;">Сохранить</button>
+                      <button (click)="cancelEditing()" style="background: #94a3b8; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer;">Отмена</button>
+                    </div>
+                  </div>
+                } @else {
+                  <p style="margin: 0; color: #1e293b;">{{ comment.text }}</p>
+                  <button (click)="startEditing(comment)" style="margin-top: 10px; background: transparent; border: 1px solid #cbd5e1; color: #475569; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.85rem;">Редактировать</button>
+                  <button (click)="deleteComment(comment.id)" style="margin-top: 10px; margin-left: 10px; background: transparent; border: 1px solid #e53e3e; color: #e53e3e; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.85rem;">Удалить</button>
+                }
+              </div>
+            }
+            @if (myComments.length === 0) {
+              <p style="color: #64748b; font-style: italic;">У вас пока нет комментариев.</p>
+            }
+          </div>
+        </div>
+      }
 
-      <button (click)="logout()" style="margin-top: 2rem; background: #e53e3e; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;">
+      @if (isAdmin && activeTab === 'all-comments') {
+        <div class="all-comments-section" style="margin-top: 1.5rem;">
+          <h3>Все комментарии ({{ allComments.length }})</h3>
+          <div class="comments-list">
+            @for (comment of allComments; track comment.id) {
+              <div class="comment-card" style="background: #fff1f2; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; border: 1px solid #fecdd3;">
+                <div style="font-size: 0.9rem; color: #9f1239; margin-bottom: 8px; display: flex; justify-content: space-between;">
+                  <span><strong>{{ comment.product_name }}</strong> (Автор: {{ comment.author_name }})</span>
+                  <span>{{ comment.created_at | date:'short' }}</span>
+                </div>
+                <p style="margin: 0; color: #1e293b;">{{ comment.text }}</p>
+                <button (click)="deleteComment(comment.id)" style="margin-top: 10px; background: #e53e3e; color: white; border: none; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.85rem;">Удалить (Админ)</button>
+              </div>
+            }
+          </div>
+        </div>
+      }
+
+      @if (isAdmin && activeTab === 'products') {
+        <div class="products-section" style="margin-top: 1.5rem;">
+          <h3>Управление товарами ({{ products.length }})</h3>
+          
+          <div class="add-product-form" style="background: #f8fafc; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; border: 1px solid #e2e8f0;">
+            <h4>Добавить новый товар</h4>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px;">
+              <input [(ngModel)]="newProduct.brand" placeholder="Бренд" style="padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+              <input [(ngModel)]="newProduct.name" placeholder="Название" style="padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+              <input [(ngModel)]="newProduct.serial_number" placeholder="Серийный номер" style="padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+              <input [(ngModel)]="newProduct.manufacture_location" placeholder="Страна производства" style="padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+              <textarea [(ngModel)]="newProduct.history" placeholder="История и происхождение" style="grid-column: span 2; padding: 8px; border: 1px solid #ccc; border-radius: 4px;"></textarea>
+              <label style="grid-column: span 2; display: flex; align-items: center; gap: 8px;">
+                <input type="checkbox" [(ngModel)]="newProduct.is_authentic"> Оригинал (VERIFIED AUTHENTIC)
+              </label>
+            </div>
+            <button (click)="addProduct()" style="margin-top: 10px; background: #10b981; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;">Создать товар</button>
+          </div>
+
+          <div class="products-list" style="display: flex; flex-direction: column; gap: 10px;">
+            @for (product of products; track product.id) {
+              <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background: white; border: 1px solid #e2e8f0; border-radius: 8px;">
+                <div>
+                  <strong>{{ product.brand }} {{ product.name }}</strong> ({{ product.serial_number }})
+                  <span [style.color]="product.is_authentic ? 'green' : 'red'">[{{ product.is_authentic ? 'Оригинал' : 'Подделка' }}]</span>
+                </div>
+                <button (click)="deleteProduct(product.id)" style="background: #e53e3e; color: white; border: none; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.85rem;">Удалить</button>
+              </div>
+            }
+          </div>
+        </div>
+      }
+
+      <button (click)="logout()" style="margin-top: 2rem; background: #94a3b8; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;">
         Выйти из аккаунта
       </button>
     </div>

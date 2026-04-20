@@ -20,13 +20,13 @@ export class ApiService {
   }
 
   login(data: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/login/`, data).pipe(
+    return this.http.post(`${this.apiUrl}/auth/login/`, data).pipe(
       catchError((error) => throwError(() => error))
     );
   }
 
   register(data: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/register/`, data).pipe(
+    return this.http.post(`${this.apiUrl}/auth/register/`, data).pipe(
       catchError((error) => throwError(() => error))
     );
   }
@@ -34,7 +34,7 @@ export class ApiService {
   addComment(productId: number, text: string): Observable<any> {
     const token = localStorage.getItem('token');
     const headers = { 'Authorization': `Token ${token}` };
-    return this.http.post(`${this.apiUrl}/products/${productId}/comments/`, { text }, { headers }).pipe(
+    return this.http.post(`${this.apiUrl}/comments/product/${productId}/`, { text }, { headers }).pipe(
       catchError((error) => throwError(() => error))
     );
   }
@@ -51,6 +51,46 @@ export class ApiService {
     const token = localStorage.getItem('token');
     const headers = { 'Authorization': `Token ${token}` };
     return this.http.put(`${this.apiUrl}/comments/${commentId}/`, { text }, { headers }).pipe(
+      catchError((error) => throwError(() => error))
+    );
+  }
+
+  deleteComment(commentId: number): Observable<any> {
+    const token = localStorage.getItem('token');
+    const headers = { 'Authorization': `Token ${token}` };
+    return this.http.delete(`${this.apiUrl}/comments/${commentId}/`, { headers }).pipe(
+      catchError((error) => throwError(() => error))
+    );
+  }
+
+  getAllComments(): Observable<any> {
+    const token = localStorage.getItem('token');
+    const headers = { 'Authorization': `Token ${token}` };
+    return this.http.get(`${this.apiUrl}/all-comments/`, { headers }).pipe(
+      catchError((error) => throwError(() => error))
+    );
+  }
+
+  getProducts(): Observable<any> {
+    const token = localStorage.getItem('token');
+    const headers = { 'Authorization': `Token ${token}` };
+    return this.http.get(`${this.apiUrl}/products/`, { headers }).pipe(
+      catchError((error) => throwError(() => error))
+    );
+  }
+
+  addProduct(data: any): Observable<any> {
+    const token = localStorage.getItem('token');
+    const headers = { 'Authorization': `Token ${token}` };
+    return this.http.post(`${this.apiUrl}/products/`, data, { headers }).pipe(
+      catchError((error) => throwError(() => error))
+    );
+  }
+
+  deleteProduct(productId: number): Observable<any> {
+    const token = localStorage.getItem('token');
+    const headers = { 'Authorization': `Token ${token}` };
+    return this.http.delete(`${this.apiUrl}/products/${productId}/`, { headers }).pipe(
       catchError((error) => throwError(() => error))
     );
   }

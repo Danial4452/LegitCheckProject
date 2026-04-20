@@ -1,0 +1,399 @@
+{
+  "info": {
+    "name": "Legit API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://127.0.0.1:8000"
+    },
+    {
+      "key": "token",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{base_url}}/api/auth/register/", "host": ["{{base_url}}"], "path": ["api", "auth", "register", ""] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"testuser\",\n  \"password\": \"test1234\",\n  \"email\": \"test@test.com\"\n}"
+            }
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "Created",
+              "code": 201,
+              "body": "{\n  \"token\": \"abc123xyz...\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var json = pm.response.json();",
+                  "pm.collectionVariables.set('token', json.token);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{base_url}}/api/auth/login/", "host": ["{{base_url}}"], "path": ["api", "auth", "login", ""] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"testuser\",\n  \"password\": \"test1234\"\n}"
+            }
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"token\": \"abc123xyz...\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Token {{token}}" }
+            ],
+            "url": { "raw": "{{base_url}}/api/auth/logout/", "host": ["{{base_url}}"], "path": ["api", "auth", "logout", ""] }
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"message\": \"Вышли успешно\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Categories",
+      "item": [
+        {
+          "name": "Get All Categories",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Token {{token}}" }],
+            "url": { "raw": "{{base_url}}/api/categories/", "host": ["{{base_url}}"], "path": ["api", "categories", ""] }
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "[\n  {\n    \"id\": 1,\n    \"name\": \"Электроника\",\n    \"description\": \"Электронные товары\"\n  }\n]"
+            }
+          ]
+        },
+        {
+          "name": "Create Category",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Token {{token}}" }
+            ],
+            "url": { "raw": "{{base_url}}/api/categories/", "host": ["{{base_url}}"], "path": ["api", "categories", ""] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Электроника\",\n  \"description\": \"Электронные товары\"\n}"
+            }
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "Created",
+              "code": 201,
+              "body": "{\n  \"id\": 1,\n  \"name\": \"Электроника\",\n  \"description\": \"Электронные товары\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Category by ID",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Token {{token}}" }],
+            "url": { "raw": "{{base_url}}/api/categories/1/", "host": ["{{base_url}}"], "path": ["api", "categories", "1", ""] }
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"id\": 1,\n  \"name\": \"Электроника\",\n  \"description\": \"Электронные товары\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Update Category",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Token {{token}}" }
+            ],
+            "url": { "raw": "{{base_url}}/api/categories/1/", "host": ["{{base_url}}"], "path": ["api", "categories", "1", ""] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Гаджеты\",\n  \"description\": \"Обновлённое описание\"\n}"
+            }
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"id\": 1,\n  \"name\": \"Гаджеты\",\n  \"description\": \"Обновлённое описание\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Delete Category",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Token {{token}}" }],
+            "url": { "raw": "{{base_url}}/api/categories/1/", "host": ["{{base_url}}"], "path": ["api", "categories", "1", ""] }
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "No Content",
+              "code": 204,
+              "body": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Products",
+      "item": [
+        {
+          "name": "Get All Products",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Token {{token}}" }],
+            "url": { "raw": "{{base_url}}/api/products/", "host": ["{{base_url}}"], "path": ["api", "products", ""] }
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "[\n  {\n    \"id\": 1,\n    \"name\": \"iPhone 15\",\n    \"brand\": \"Apple\",\n    \"is_authentic\": true,\n    \"serial_number\": \"SN123456789\",\n    \"manufacture_location\": \"China\",\n    \"history\": \"Куплен в официальном магазине\",\n    \"image_url\": \"https://example.com/image.jpg\",\n    \"category\": 1,\n    \"owner\": 1,\n    \"created_at\": \"2024-01-01T00:00:00Z\",\n    \"updated_at\": \"2024-01-01T00:00:00Z\"\n  }\n]"
+            }
+          ]
+        },
+        {
+          "name": "Create Product",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Token {{token}}" }
+            ],
+            "url": { "raw": "{{base_url}}/api/products/", "host": ["{{base_url}}"], "path": ["api", "products", ""] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"iPhone 15\",\n  \"brand\": \"Apple\",\n  \"is_authentic\": true,\n  \"serial_number\": \"SN123456789\",\n  \"manufacture_location\": \"China\",\n  \"history\": \"Куплен в официальном магазине\",\n  \"image_url\": \"https://example.com/image.jpg\",\n  \"category\": 1\n}"
+            }
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "Created",
+              "code": 201,
+              "body": "{\n  \"id\": 1,\n  \"name\": \"iPhone 15\",\n  \"brand\": \"Apple\",\n  \"is_authentic\": true,\n  \"serial_number\": \"SN123456789\",\n  \"manufacture_location\": \"China\",\n  \"history\": \"Куплен в официальном магазине\",\n  \"image_url\": \"https://example.com/image.jpg\",\n  \"category\": 1,\n  \"owner\": 1,\n  \"created_at\": \"2024-01-01T00:00:00Z\",\n  \"updated_at\": \"2024-01-01T00:00:00Z\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Product by ID",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Token {{token}}" }],
+            "url": { "raw": "{{base_url}}/api/products/1/", "host": ["{{base_url}}"], "path": ["api", "products", "1", ""] }
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"id\": 1,\n  \"name\": \"iPhone 15\",\n  \"brand\": \"Apple\",\n  \"is_authentic\": true,\n  \"serial_number\": \"SN123456789\",\n  \"manufacture_location\": \"China\",\n  \"history\": \"Куплен в официальном магазине\",\n  \"image_url\": \"https://example.com/image.jpg\",\n  \"category\": 1,\n  \"owner\": 1,\n  \"created_at\": \"2024-01-01T00:00:00Z\",\n  \"updated_at\": \"2024-01-01T00:00:00Z\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Update Product (PUT)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Token {{token}}" }
+            ],
+            "url": { "raw": "{{base_url}}/api/products/1/", "host": ["{{base_url}}"], "path": ["api", "products", "1", ""] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"iPhone 15 Pro\",\n  \"brand\": \"Apple\",\n  \"is_authentic\": true,\n  \"serial_number\": \"SN123456789\",\n  \"manufacture_location\": \"China\",\n  \"history\": \"Обновлённая история\",\n  \"image_url\": \"https://example.com/image.jpg\",\n  \"category\": 1\n}"
+            }
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"id\": 1,\n  \"name\": \"iPhone 15 Pro\",\n  \"brand\": \"Apple\",\n  \"is_authentic\": true,\n  \"serial_number\": \"SN123456789\",\n  \"manufacture_location\": \"China\",\n  \"history\": \"Обновлённая история\",\n  \"image_url\": \"https://example.com/image.jpg\",\n  \"category\": 1,\n  \"owner\": 1,\n  \"created_at\": \"2024-01-01T00:00:00Z\",\n  \"updated_at\": \"2024-01-01T00:00:00Z\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Partial Update Product (PATCH)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Token {{token}}" }
+            ],
+            "url": { "raw": "{{base_url}}/api/products/1/", "host": ["{{base_url}}"], "path": ["api", "products", "1", ""] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"is_authentic\": false\n}"
+            }
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"id\": 1,\n  \"name\": \"iPhone 15\",\n  \"brand\": \"Apple\",\n  \"is_authentic\": false,\n  \"serial_number\": \"SN123456789\",\n  \"manufacture_location\": \"China\",\n  \"history\": \"Куплен в официальном магазине\",\n  \"image_url\": \"https://example.com/image.jpg\",\n  \"category\": 1,\n  \"owner\": 1,\n  \"created_at\": \"2024-01-01T00:00:00Z\",\n  \"updated_at\": \"2024-01-01T00:00:00Z\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Delete Product",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Token {{token}}" }],
+            "url": { "raw": "{{base_url}}/api/products/1/", "host": ["{{base_url}}"], "path": ["api", "products", "1", ""] }
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "No Content",
+              "code": 204,
+              "body": ""
+            }
+          ]
+        },
+        {
+          "name": "Filter Products",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Token {{token}}" }],
+            "url": {
+              "raw": "{{base_url}}/api/products/filter/?brand=Apple&is_authentic=true",
+              "host": ["{{base_url}}"],
+              "path": ["api", "products", "filter", ""],
+              "query": [
+                { "key": "brand", "value": "Apple" },
+                { "key": "is_authentic", "value": "true" },
+                { "key": "category", "value": "1", "disabled": true }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "[\n  {\n    \"id\": 1,\n    \"name\": \"iPhone 15\",\n    \"brand\": \"Apple\",\n    \"is_authentic\": true,\n    \"serial_number\": \"SN123456789\",\n    \"manufacture_location\": \"China\",\n    \"history\": \"Куплен в официальном магазине\",\n    \"image_url\": \"https://example.com/image.jpg\",\n    \"category\": 1,\n    \"owner\": 1,\n    \"created_at\": \"2024-01-01T00:00:00Z\",\n    \"updated_at\": \"2024-01-01T00:00:00Z\"\n  }\n]"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Comments",
+      "item": [
+        {
+          "name": "Get Comments by Product",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Token {{token}}" }],
+            "url": { "raw": "{{base_url}}/api/comments/product/1/", "host": ["{{base_url}}"], "path": ["api", "comments", "product", "1", ""] }
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "[\n  {\n    \"id\": 1,\n    \"text\": \"Отличный продукт!\",\n    \"product\": 1,\n    \"author\": 1,\n    \"created_at\": \"2024-01-01T00:00:00Z\"\n  }\n]"
+            }
+          ]
+        },
+        {
+          "name": "Create Comment",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Token {{token}}" }
+            ],
+            "url": { "raw": "{{base_url}}/api/comments/product/1/", "host": ["{{base_url}}"], "path": ["api", "comments", "product", "1", ""] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"text\": \"Отличный продукт!\"\n}"
+            }
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "Created",
+              "code": 201,
+              "body": "{\n  \"id\": 1,\n  \"text\": \"Отличный продукт!\",\n  \"product\": 1,\n  \"author\": 1,\n  \"created_at\": \"2024-01-01T00:00:00Z\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Delete Comment",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Token {{token}}" }],
+            "url": { "raw": "{{base_url}}/api/comments/1/", "host": ["{{base_url}}"], "path": ["api", "comments", "1", ""] }
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "No Content",
+              "code": 204,
+              "body": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
