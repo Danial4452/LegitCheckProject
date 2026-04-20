@@ -49,7 +49,32 @@
         <p>{{ product.history }}</p>
       </div>
 
-      <button routerLink="/" class="back-btn">Проверить еще одну вещь</button>
+      <div class="comments-section" style="margin-top: 2rem; border-top: 1px solid #ddd; padding-top: 1.5rem;">
+        <h3>Комментарии экспертов ({{ product.comments?.length || 0 }})</h3>
+        
+        @if (isExpert) {
+          <div class="comment-form" style="margin-bottom: 1.5rem;">
+            <textarea [(ngModel)]="newComment" placeholder="Оставьте свой комментарий о проверке..." rows="3" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ccc; margin-bottom: 10px;"></textarea>
+            <button (click)="submitComment()" [disabled]="!newComment.trim()" style="background: #2563eb; color: white; padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer;">Добавить комментарий</button>
+          </div>
+        }
+
+        <div class="comments-list">
+          @for (comment of product.comments; track comment.id) {
+            <div class="comment-item" style="background: #f8fafc; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+              <div style="font-size: 0.85rem; color: #64748b; margin-bottom: 5px;">
+                <strong>{{ comment.author_name }}</strong> • {{ comment.created_at | date:'medium' }}
+              </div>
+              <p style="margin: 0;">{{ comment.text }}</p>
+            </div>
+          }
+          @if (!product.comments || product.comments.length === 0) {
+            <p style="color: #64748b; font-style: italic;">Комментариев пока нет.</p>
+          }
+        </div>
+      </div>
+
+      <button routerLink="/" class="back-btn" style="margin-top: 2rem;">Проверить еще одну вещь</button>
     </div>
   }
 </div>

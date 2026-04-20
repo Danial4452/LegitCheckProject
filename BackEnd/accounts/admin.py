@@ -20,3 +20,10 @@ class ProfileAdmin(admin.ModelAdmin):
     list_display = ['user', 'phone']
     search_fields = ['user__login']
 
+from .models import Token
+
+@admin.register(Token)
+class TokenAdmin(admin.ModelAdmin):
+    list_display = ['key', 'user', 'created']
+    search_fields = ['user__login']
+

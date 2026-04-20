@@ -1,3 +1,10 @@
+export interface Comment {
+  id: number;
+  author_name: string;
+  text: string;
+  created_at: string;
+}
+
 export interface Product {
   id: number;
   name: string;
@@ -7,4 +14,5 @@ export interface Product {
   manufacture_location: string;
   history: string;
   image_url?: string;
+  comments?: Comment[];
 }

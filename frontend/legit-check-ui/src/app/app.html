@@ -1,10 +1,17 @@
 <nav>
-  <a routerLink="/" class="logo">LEGIT CHECK</a>
+  <a routerLink="/" class="logo">
+    <img src="/logo.png" alt="Legit Check Logo">
+    <span>LEGIT CHECK</span>
+  </a>
   
   <div class="nav-links">
     <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Главная</a>
-    <a routerLink="/login" routerLinkActive="active">Вход для экспертов</a>
-    <a routerLink="/register" routerLinkActive="active">Регистрация</a>
+    @if (!isExpert) {
+      <a routerLink="/login" routerLinkActive="active">Вход для экспертов</a>
+      <a routerLink="/register" routerLinkActive="active">Регистрация</a>
+    } @else {
+      <a routerLink="/dashboard" routerLinkActive="active">Профиль эксперта</a>
+    }
   </div>
 </nav>
 

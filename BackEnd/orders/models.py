@@ -1,6 +1,6 @@
 from django.db import models
-from LegitCheckProject.BackEnd.accounts.models import User
-from LegitCheckProject.BackEnd.products.models import Product
+from accounts.models import User
+from products.models import Product
 
 
 class OrderStatus(models.Model):

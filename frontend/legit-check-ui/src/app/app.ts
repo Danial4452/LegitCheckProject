@@ -9,4 +9,8 @@ import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 })
 export class App {
   protected readonly title = signal('legit-check-ui');
+
+  get isExpert(): boolean {
+    return !!localStorage.getItem('token');
+  }
 }

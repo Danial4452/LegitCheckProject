@@ -2,17 +2,18 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ApiService } from '../../services/api';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule], // Обязательно для ngModel
+  imports: [CommonModule, FormsModule],
   templateUrl: './login.html',
   styleUrl: './login.scss'
 })
 export class LoginComponent {
   loginData = {
-    username: '',
+    login: '',
     password: ''
   };
   errorMessage: string = '';
@@ -20,14 +21,21 @@ export class LoginComponent {
   constructor(private apiService: ApiService, private router: Router) {}
 
   onLogin() {
-    console.log('Данные для входа:', this.loginData);
-    
-    // Пока бэкенд не готов, сделаем проверку "для вида"
-    if (this.loginData.username === 'admin' && this.loginData.password === '12345') {
-      localStorage.setItem('token', 'fake-jwt-token'); // Имитация JWT
-      this.router.navigate(['/']); // Возвращаемся на главную
-    } else {
-      this.errorMessage = 'Неверный логин или пароль';
-    }
+    this.apiService.login(this.loginData).subscribe({
+      next: (response) => {
+        localStorage.setItem('token', response.token);
+        localStorage.setItem('role', response.role || 'Expert');
+        
+        // Полная перезагрузка страницы для эффекта "настоящего входа", как на YouTube
+        window.location.href = '/dashboard';
+      },
+      error: (err) => {
+        if (err.error && err.error.error) {
+          this.errorMessage = err.error.error;
+        } else {
+          this.errorMessage = 'Произошла ошибка при входе';
+        }
+      }
+    });
   }
 }

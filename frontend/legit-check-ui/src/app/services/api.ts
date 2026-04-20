@@ -19,6 +19,42 @@ export class ApiService {
     );
   }
 
+  login(data: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/login/`, data).pipe(
+      catchError((error) => throwError(() => error))
+    );
+  }
+
+  register(data: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/register/`, data).pipe(
+      catchError((error) => throwError(() => error))
+    );
+  }
+
+  addComment(productId: number, text: string): Observable<any> {
+    const token = localStorage.getItem('token');
+    const headers = { 'Authorization': `Token ${token}` };
+    return this.http.post(`${this.apiUrl}/products/${productId}/comments/`, { text }, { headers }).pipe(
+      catchError((error) => throwError(() => error))
+    );
+  }
+
+  getMyComments(): Observable<any> {
+    const token = localStorage.getItem('token');
+    const headers = { 'Authorization': `Token ${token}` };
+    return this.http.get(`${this.apiUrl}/my-comments/`, { headers }).pipe(
+      catchError((error) => throwError(() => error))
+    );
+  }
+
+  updateComment(commentId: number, text: string): Observable<any> {
+    const token = localStorage.getItem('token');
+    const headers = { 'Authorization': `Token ${token}` };
+    return this.http.put(`${this.apiUrl}/comments/${commentId}/`, { text }, { headers }).pipe(
+      catchError((error) => throwError(() => error))
+    );
+  }
+
   private handleError(error: HttpErrorResponse) {
     let errorMessage = 'Произошла неизвестная ошибка';
     if (error.status === 404) {

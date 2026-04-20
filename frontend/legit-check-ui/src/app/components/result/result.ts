@@ -3,11 +3,12 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { ApiService } from '../../services/api'; 
 import { Product } from '../../models/product';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-result',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, FormsModule],
   templateUrl: './result.html',
   styleUrl: './result.scss'
 })
@@ -15,6 +16,8 @@ export class ResultComponent implements OnInit {
   product: Product | null = null;
   error: string | null = null;
   loading: boolean = true;
+  isExpert: boolean = false;
+  newComment: string = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -24,26 +27,42 @@ export class ResultComponent implements OnInit {
 
   ngOnInit() {
     const code = this.route.snapshot.paramMap.get('code');
+    if (!code) {
+      this.error = "Код не предоставлен";
+      this.loading = false;
+      return;
+    }
+
     this.loading = true;
 
-    setTimeout(() => {
-      // Имитация логики: если в коде есть слово "fake", то это подделка
-      const isFake = code?.toLowerCase().includes('fake');
+    this.apiService.checkProduct(code).subscribe({
+      next: (data) => {
+        this.product = data;
+        this.loading = false;
+        this.isExpert = !!localStorage.getItem('token');
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        this.error = "Товар с таким серийным номером не найден или произошла ошибка сервера.";
+        this.loading = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }
 
-      this.product = {
-        id: 1,
-        name: isFake ? "Unknown Model (Suspicious)" : "Air Jordan 1 Retro High",
-        brand: isFake ? "Replica" : "Nike",
-        is_authentic: !isFake, 
-        serial_number: code || 'DEMO-123', 
-        manufacture_location: isFake ? "Non-official workshop" : "Vietnam, Factory PH-04",
-        history: isFake 
-          ? "ВНИМАНИЕ: Данный серийный номер совпадает с известными копиями или не прошел проверку материалов." 
-          : "Данная пара успешно прошла автоматизированную проверку в базе KBTU."
-      };
-      
-      this.loading = false;
-      this.cdr.detectChanges(); 
-    }, 1500); 
+  submitComment() {
+    if (!this.newComment.trim() || !this.product) return;
+    
+    this.apiService.addComment(this.product.id, this.newComment).subscribe({
+      next: (comment) => {
+        if (!this.product!.comments) this.product!.comments = [];
+        this.product!.comments.unshift(comment); // add to top
+        this.newComment = '';
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        alert('Ошибка при добавлении комментария. Убедитесь, что вы авторизованы.');
+      }
+    });
   }
 }
