@@ -56,7 +56,7 @@ export class ResultComponent implements OnInit {
     this.apiService.addComment(this.product.id, this.newComment).subscribe({
       next: (comment) => {
         if (!this.product!.comments) this.product!.comments = [];
-        this.product!.comments.unshift(comment); // add to top
+        this.product!.comments.unshift(comment); 
         this.newComment = '';
         this.cdr.detectChanges();
       },
