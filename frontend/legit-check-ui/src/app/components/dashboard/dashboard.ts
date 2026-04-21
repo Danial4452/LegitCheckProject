@@ -25,7 +25,6 @@ export class Dashboard implements OnInit {
   loading: boolean = true;
   loadingText: string = 'Подготовка рабочего пространства...';
 
-  // For adding a product
   newProduct = {
     name: '', brand: '', serial_number: '', manufacture_location: '', history: '', is_authentic: true
   };
@@ -45,7 +44,6 @@ export class Dashboard implements OnInit {
     this.username = localStorage.getItem('username') || 'Пользователь';
     this.isAdmin = localStorage.getItem('isAdmin') === 'true';
     
-    // Искусственная задержка для красивой загрузки (1.5 сек)
     setTimeout(() => {
       this.loadMyComments();
       if (this.isAdmin) {
