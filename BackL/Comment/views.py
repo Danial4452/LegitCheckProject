@@ -36,7 +36,7 @@ class CommentDetailView(APIView):
         comment = self.get_object(pk)
         if not comment:
             return Response(status=status.HTTP_404_NOT_FOUND)
-        self.check_object_permissions(request, comment)  # ← проверка роли
+        self.check_object_permissions(request, comment)  
         comment.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 

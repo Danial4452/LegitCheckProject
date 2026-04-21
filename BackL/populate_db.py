@@ -22,8 +22,7 @@ def generate_products():
         cat, _ = Category.objects.get_or_create(name=c_name)
         categories[c_name] = cat
 
-    # Наборы реалистичных данных с префиксами
-    # Формат: (Brand, Name, Category, Location, Prefix)
+    
     sneakers = [
         ('Nike', 'Air Jordan 1 Retro High Chicago', 'Кроссовки', 'China', 'AJ1-RETRO'),
         ('Nike', 'Dunk Low Panda', 'Кроссовки', 'Vietnam', 'DUNK-PND'),
@@ -81,12 +80,12 @@ def generate_products():
     fake_count = 1
     global_index = 1
 
-    # Генерируем 50 товаров вперемешку
+
     for i in range(50):
         template = all_templates[i % len(all_templates)]
         brand, name, cat_name, loc, prefix = template
         
-        is_legit = i % 2 == 0  # чередуем 25 настоящих и 25 фейковых
+        is_legit = i % 2 == 0  
 
         if is_legit:
             serial = f"{prefix}-{global_index:03d}"

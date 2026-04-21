@@ -13,12 +13,12 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly
 @api_view(['GET', 'POST'])
 def category_list(request):
     if request.method == 'GET':
-        # все авторизованные могут смотреть
+        
         categories = Category.objects.all()
         return Response(CategorySerializer(categories, many=True).data)
 
     if request.method == 'POST':
-        # только админ может создавать
+    
         if not request.user.is_staff:
             return Response(
                 {'error': 'Нет доступа'},
@@ -32,7 +32,7 @@ def category_list(request):
 
 
 class CategoryDetailView(APIView):
-    permission_classes = [IsAdmin]  # только админ
+    permission_classes = [IsAdmin] 
 
     def get_object(self, pk):
         try:

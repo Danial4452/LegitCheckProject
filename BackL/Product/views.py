@@ -18,7 +18,7 @@ def check_product(request, serial_number):
         return Response({'error': 'Товар с таким кодом не найден в базе данных.'}, status=status.HTTP_404_NOT_FOUND)
 
 # Product/views.py
-# FBV — список и создание (полный CRUD начинается здесь)
+
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
 def product_list(request):
@@ -38,7 +38,7 @@ def product_list(request):
         )
         serializer = ProductSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save(owner=request.user)  # привязка к пользователю
+            serializer.save(owner=request.user) 
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -77,7 +77,7 @@ class ProductDetailView(APIView):
         product = self.get_object(pk)
         if not product:
             return Response(status=status.HTTP_404_NOT_FOUND)
-        self.check_object_permissions(request, product)  # ← проверка роли
+        self.check_object_permissions(request, product) 
         serializer = ProductSerializer(product, data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -88,7 +88,7 @@ class ProductDetailView(APIView):
         product = self.get_object(pk)
         if not product:
             return Response(status=status.HTTP_404_NOT_FOUND)
-        self.check_object_permissions(request, product)  # ← проверка роли
+        self.check_object_permissions(request, product) 
         serializer = ProductSerializer(product, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
@@ -99,7 +99,7 @@ class ProductDetailView(APIView):
         product = self.get_object(pk)
         if not product:
             return Response(status=status.HTTP_404_NOT_FOUND)
-        self.check_object_permissions(request, product)  # ← проверка роли
+        self.check_object_permissions(request, product)  
         product.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
     
