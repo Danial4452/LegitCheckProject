@@ -27,7 +27,6 @@ export class LoginComponent {
         localStorage.setItem('username', response.username);
         localStorage.setItem('isAdmin', response.is_admin ? 'true' : 'false');
         
-        // Полная перезагрузка страницы для эффекта "настоящего входа", как на YouTube
         window.location.href = '/dashboard';
       },
       error: (err) => {
