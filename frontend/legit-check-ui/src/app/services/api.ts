@@ -8,14 +8,14 @@ import { Product } from '../models/product';
   providedIn: 'root'
 })
 export class ApiService {
-  private apiUrl = 'http://127.0.0.1:8000/api'; // Адрес Django твоего напарника
+  private apiUrl = 'http://127.0.0.1:8000/api'; 
 
   constructor(private http: HttpClient) { }
 
-  // Метод для проверки кода
+  
   checkProduct(code: string): Observable<Product> {
     return this.http.get<Product>(`${this.apiUrl}/check/${code}/`).pipe(
-      catchError(this.handleError) // Requirement 9: Graceful error handling
+      catchError(this.handleError)
     );
   }
 
@@ -102,7 +102,6 @@ export class ApiService {
     } else if (error.status === 500) {
       errorMessage = 'Ошибка на стороне сервера. Попробуйте позже.';
     }
-    // Здесь можно выводить ошибку в консоль или алертом
     return throwError(() => new Error(errorMessage));
   }
 }
